@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using TeamSalesTrackerApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,10 +34,10 @@ builder.Services.AddSwaggerGen(c => {
         }
     });
 });
-//builder.Services.AddDbContext<>(options =>
-//{
-//    options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection"));
-//});
+builder.Services.AddDbContext<SalesTrackerDB>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection"));
+});
 
 
 var app = builder.Build();
