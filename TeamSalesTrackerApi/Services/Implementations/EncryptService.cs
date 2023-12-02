@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
+using TeamSalesTrackerApi.Dtos;
 using TeamSalesTrackerApi.Services.Interfaces;
 
 namespace TeamSalesTrackerApi.Services.Implementations
@@ -13,21 +14,50 @@ namespace TeamSalesTrackerApi.Services.Implementations
             _configuration = configuration;
         }
 
-        public byte[] Encrypt(string password)
+        public EncryptData Encrypt(string password)
         {
-            using (var hmac = new HMACSHA512()) {
-                return hmac.ComputeHash(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
+            EncryptData data = new EncryptData();
+
+            // Genera un nuevo salt para cada cifrado
+            data.PasswordSalt = GenerateRandomSalt();
+
+            using (var hmac = new HMACSHA512(data.PasswordSalt))
+            {
+                var encryptPass = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                data.Password = ByteToString(encryptPass);
+                return data;
             }
         }
 
-        public bool VerifyPassword(string password, byte[] actualPass)
+        public bool VerifyPassword(string password, byte[] passSalt, string actualPass)
         {
-            var passSalt = Encoding.UTF8.GetBytes(_configuration["JWT:key"]);
             using (var hmac = new HMACSHA512(passSalt))
             {
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(actualPass);
+                var enteredPassword = ByteToString(computedHash);
+                return enteredPassword.Equals(actualPass);
             }
+        }
+
+        private byte[] GenerateRandomSalt()
+        {
+            
+            var salt = new byte[64]; 
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(salt);
+            }
+            return salt;
+        }
+
+        private string ByteToString(byte[] pass)
+        {
+            StringBuilder result = new StringBuilder(pass.Length * 2);
+            foreach (byte b in pass)
+            {
+                result.AppendFormat("{0:x2}", b);
+            }
+            return result.ToString();
         }
     }
 }

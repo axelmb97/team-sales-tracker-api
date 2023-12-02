@@ -14,7 +14,9 @@ namespace TeamSalesTrackerApi.Models
         [Column("email")]
         public string Email { get; set; }
         [Column("password")]
-        public byte[] Password { get; set; }
+        public string Password { get; set; }
+        [Column("password_salt")]
+        public byte[] PasswordSalt { get; set; }
         [Column("date_of_birth")]
         public DateTime DateOfBirth { get; set; }
         [Column("address_id")]
