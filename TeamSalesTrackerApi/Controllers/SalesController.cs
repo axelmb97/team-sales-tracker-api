@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TeamSalesTrackerApi.Business.Commands;
+using TeamSalesTrackerApi.Results.Products;
 
 namespace TeamSalesTrackerApi.Controllers
 {
@@ -13,5 +15,6 @@ namespace TeamSalesTrackerApi.Controllers
         {
             _mediator = mediator;
         }
+        
     }
 }

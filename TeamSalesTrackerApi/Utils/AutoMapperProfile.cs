@@ -9,12 +9,15 @@ namespace TeamSalesTrackerApi.Utils
     {
         public AutoMapperProfile()
         {
+            //USERS
             CreateMap<RegisterUserCommand, User>()
                 .ForMember(dest => dest.Password, opt => opt.Ignore());
-                
             CreateMap<User, RegisteredUserDto>();
-
             CreateMap<RegisterUserCommand, Address>();
+
+            //PRODUCTS
+            CreateMap<CreateProductCommand, Product>();
+            CreateMap<UpdateProductCommand, Product>();
         }
     }
 }
