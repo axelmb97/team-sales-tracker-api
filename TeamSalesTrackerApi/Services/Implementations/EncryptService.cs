@@ -8,17 +8,10 @@ namespace TeamSalesTrackerApi.Services.Implementations
 {
     public class EncryptService : IEncryptService
     {
-        private readonly IConfiguration _configuration;
-        public EncryptService(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
+       
         public EncryptData Encrypt(string password)
         {
             EncryptData data = new EncryptData();
-
-            // Genera un nuevo salt para cada cifrado
             data.PasswordSalt = GenerateRandomSalt();
 
             using (var hmac = new HMACSHA512(data.PasswordSalt))
