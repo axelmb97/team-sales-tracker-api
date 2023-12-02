@@ -28,14 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Dtos\" />
-    <Folder Include="Business\" />
+    <Folder Include="Business\Validators\" />
+    <Folder Include="Business\Queries\" />
     <Folder Include="Repositories\" />
-    <Folder Include="Results\" />
-    <Folder Include="Services\Interfaces\" />
-    <Folder Include="Services\Implementations\" />
-    <Folder Include="Utils\" />
   </ItemGroup>
 
 </Project>

@@ -18,6 +18,6 @@ namespace TeamSalesTrackerApi.Models
         [Column("interval_id")]
         public long IntervalId { get; set; }
         [ForeignKey("IntervalId")]
-        public Interval Interval { get; set; }
+        public  Interval Interval { get; set; }
     }
 }

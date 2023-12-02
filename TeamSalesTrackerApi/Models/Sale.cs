@@ -22,6 +22,6 @@ namespace TeamSalesTrackerApi.Models
         [Column("created_at")]
         public DateOnly CreatedAt { get; set; }
 
-        public List<SaleDetail> Details { get; set; }
+        public virtual List<SaleDetail> Details { get; set; }
     }
 }
