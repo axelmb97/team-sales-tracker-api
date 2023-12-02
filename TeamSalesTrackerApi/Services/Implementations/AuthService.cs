@@ -39,7 +39,9 @@ namespace TeamSalesTrackerApi.Services.Implementations
 
 
             var user = _mapper.Map<User>(userData);
-            user.Password = _encryptService.Encrypt(userData.Password);
+            var encrypData = _encryptService.Encrypt(userData.Password);
+            user.Password = encrypData.Password;
+            user.PasswordSalt = encrypData.PasswordSalt;
             user.AddressId = address.AddressId;
             user.Address = address;
             _data.Users.Add(user);
@@ -53,7 +55,15 @@ namespace TeamSalesTrackerApi.Services.Implementations
 
         public async Task<string> VerifyCredentials(string email, string password)
         {
-            throw new NotImplementedException();
+            var user = await _data.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
+            if (user == null) {
+                return String.Empty;
+            }
+            var validCredentials = _encryptService.VerifyPassword(password,user.PasswordSalt, user.Password);
+            if (!validCredentials) {
+                return String.Empty;
+            }
+            return _tokenService.CreateToken(user);
         }
     }
 }

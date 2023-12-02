@@ -21,8 +21,14 @@ namespace TeamSalesTrackerApi.Controllers
         [HttpPost]
         [Route("register")]
         public async Task<RegisterResult> userRegister(RegisterUserCommand command) {
-            var reult = await _mediator.Send(command);
-            return reult;
+            var result = await _mediator.Send(command);
+            return result;
+        }
+        [HttpPost]
+        [Route("login")]
+        public async Task<LoginResult> login(LoginCommand command) {
+            var result = await _mediator.Send(command);
+            return result;
         }
     }
 }
