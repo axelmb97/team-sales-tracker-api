@@ -21,7 +21,7 @@ namespace TeamSalesTrackerApi.Models
         public DateOnly CreatedAt { get; set; }
         [Column("state")]
         public IntervalState State { get; set; }
-        public List<IntervalTarget> Targets { get; set; }
+        public virtual List<IntervalTarget> Targets { get; set; }
 
     }
 }
