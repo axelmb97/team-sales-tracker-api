@@ -33,5 +33,18 @@ namespace TeamSalesTrackerApi.Controllers
             var result = await _mediator.Send(request);
             return result;
         }
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ProductResult> getById(long id) {
+            var request = new GetProductByIdQuery(id);
+            var result = await _mediator.Send(request);
+            return result;
+        }
+        [HttpDelete]
+        public async Task<ProductResult> deleteProduct(long id) {
+            var request = new DeleteProductCommand(id);
+            var result = await _mediator.Send(request);
+            return result;
+        }
     }
 }
