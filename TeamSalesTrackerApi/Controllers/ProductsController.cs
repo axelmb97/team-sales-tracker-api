@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TeamSalesTrackerApi.Business.Commands;
+using TeamSalesTrackerApi.Business.Queries;
 using TeamSalesTrackerApi.Results.Products;
 
 namespace TeamSalesTrackerApi.Controllers
@@ -24,6 +25,12 @@ namespace TeamSalesTrackerApi.Controllers
         [HttpPut]
         public async Task<ProductResult> updateProduct(UpdateProductCommand command) {
             var result = await _mediator.Send(command);
+            return result;
+        }
+        [HttpGet]
+        public async Task<ProductsResult> getAll() {
+            var request = new GetAllProductsQuery();
+            var result = await _mediator.Send(request);
             return result;
         }
     }

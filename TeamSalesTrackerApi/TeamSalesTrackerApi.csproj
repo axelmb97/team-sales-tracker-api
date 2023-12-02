@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Business\Queries\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
 
