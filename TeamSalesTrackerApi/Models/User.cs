@@ -15,13 +15,15 @@ namespace TeamSalesTrackerApi.Models
         public string Email { get; set; }
         [Column("password")]
         public string Password { get; set; }
+        [Column("password_salt")]
+        public byte[] PasswordSalt { get; set; }
         [Column("date_of_birth")]
-        public DateOnly DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         [Column("address_id")]
         public long AddressId { get; set; }
         [ForeignKey("AddressId")]
         public Address Address { get; set; }
 
-        public List<Interval> Intervals { get; set; }
+        public virtual List<Interval> Intervals { get; set; }
     }
 }
