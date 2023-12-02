@@ -1,11 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TeamSalesTrackerApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("intervals")]
     [ApiController]
-    public class IntervalController : ControllerBase
+    public class IntervalsController : ControllerBase
     {
+        private readonly IMediator _mediator;
+        public IntervalsController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
     }
 }

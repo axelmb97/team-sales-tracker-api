@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TeamSalesTrackerApi.Controllers
@@ -7,5 +8,10 @@ namespace TeamSalesTrackerApi.Controllers
     [ApiController]
     public class BranchesController : ControllerBase
     {
+        private readonly IMediator _mediator;
+        public BranchesController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
     }
 }
