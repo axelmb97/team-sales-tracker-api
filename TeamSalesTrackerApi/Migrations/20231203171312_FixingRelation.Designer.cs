@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TeamSalesTrackerApi.Data;
@@ -11,9 +12,10 @@ using TeamSalesTrackerApi.Data;
 namespace TeamSalesTrackerApi.Migrations
 {
     [DbContext(typeof(SalesTrackerDB))]
-    partial class SalesTrackerDBModelSnapshot : ModelSnapshot
+    [Migration("20231203171312_FixingRelation")]
+    partial class FixingRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +38,7 @@ namespace TeamSalesTrackerApi.Migrations
                         .HasColumnType("text")
                         .HasColumnName("apartment");
 
-                    b.Property<long?>("BranchId")
+                    b.Property<long>("BranchId")
                         .HasColumnType("bigint")
                         .HasColumnName("branch_id");
 
@@ -49,7 +51,7 @@ namespace TeamSalesTrackerApi.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("street_number");
 
-                    b.Property<long?>("UserId")
+                    b.Property<long>("UserId")
                         .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
@@ -313,11 +315,15 @@ namespace TeamSalesTrackerApi.Migrations
                 {
                     b.HasOne("TeamSalesTrackerApi.Models.Branch", "Branch")
                         .WithOne("Address")
-                        .HasForeignKey("TeamSalesTrackerApi.Models.Address", "BranchId");
+                        .HasForeignKey("TeamSalesTrackerApi.Models.Address", "BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TeamSalesTrackerApi.Models.User", "User")
                         .WithOne("Address")
-                        .HasForeignKey("TeamSalesTrackerApi.Models.Address", "UserId");
+                        .HasForeignKey("TeamSalesTrackerApi.Models.Address", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Branch");
 
