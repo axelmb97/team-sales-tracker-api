@@ -5,22 +5,22 @@ using System.Net;
 using TeamSalesTrackerApi.Business.Queries;
 using TeamSalesTrackerApi.Data;
 using TeamSalesTrackerApi.Results.Products;
+using TeamSalesTrackerApi.Services.Interfaces;
 
 namespace TeamSalesTrackerApi.Business.Handlers
 {
     public class GetAllProductHandler : IRequestHandler<GetAllProductsQuery, ProductsResult>
     {
-        private readonly SalesTrackerDB _data;
-        private readonly IMapper _mapper;
-        public GetAllProductHandler(SalesTrackerDB data, IMapper mapper)
+        private readonly IProductService _productService;
+        public GetAllProductHandler(IProductService productService)
         {
-            _data = data;
-            _mapper = mapper;
+            _productService = productService;
         }
+
         public async Task<ProductsResult> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
             var result = new ProductsResult();
-            var products = await _data.Products.ToListAsync();
+            var products = await _productService.GetAll();
             if (products == null) {
                 result.SetError("No se encuentran productos disponibles", HttpStatusCode.NotFound);
                 return result;

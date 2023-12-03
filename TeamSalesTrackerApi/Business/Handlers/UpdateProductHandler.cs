@@ -7,20 +7,18 @@ using TeamSalesTrackerApi.Business.Commands;
 using TeamSalesTrackerApi.Data;
 using TeamSalesTrackerApi.Models;
 using TeamSalesTrackerApi.Results.Products;
+using TeamSalesTrackerApi.Services.Interfaces;
 
 namespace TeamSalesTrackerApi.Business.Handlers
 {
     public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, ProductResult>
     {
-        private readonly SalesTrackerDB _data;
-        private readonly IMapper _mapper;
         private readonly IValidator<UpdateProductCommand> _validator;
-
-        public UpdateProductHandler(SalesTrackerDB data, IMapper mapper, IValidator<UpdateProductCommand> validator)
+        private readonly IProductService _productService;
+        public UpdateProductHandler(IValidator<UpdateProductCommand> validator, IProductService productService)
         {
-            _data = data;
-            _mapper = mapper;
             _validator = validator;
+            _productService = productService;
         }
 
         public async Task<ProductResult> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
@@ -32,20 +30,13 @@ namespace TeamSalesTrackerApi.Business.Handlers
                 result.SetError(errors, HttpStatusCode.BadRequest);
                 return result;
             }
-            var existingProduct = await _data.Products.FirstOrDefaultAsync(p => p.ProductId.Equals(request.ProductId));
-            if (existingProduct == null) { 
+            var existingProduct = await _productService.ExistsById(request.ProductId);
+            if (!existingProduct) { 
                 result.SetError($"El producto con id {request.ProductId} no existe", HttpStatusCode.BadRequest);
                 return result;
             }
 
-            existingProduct.ProductId = request.ProductId;
-            existingProduct.Name = request.Name;
-            existingProduct.Remarks = request.Remarks;
-
-            _data.Products.Update(existingProduct);
-             await _data.SaveChangesAsync();
-
-            result.Product = existingProduct;
+            result.Product = await _productService.UpdateProduct(request);
             result.Message = "Producto modificado con éxito";
 
             return result;
