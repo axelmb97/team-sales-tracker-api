@@ -35,5 +35,17 @@ namespace TeamSalesTrackerApi.Controllers
             var result = await _mediator.Send(command);
             return result;
         }
+        [HttpPut]
+        public async Task<BranchResult> UpdateBranch(UpdateBranchCommand command) {
+            var result = await _mediator.Send(command);
+            return result;
+        }
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<BranchResult> DeleteBranch(long id) {
+            var request = new DeleteBranchCommand(id);
+            var result = await _mediator.Send(request);
+            return result;
+        }
     }
 }

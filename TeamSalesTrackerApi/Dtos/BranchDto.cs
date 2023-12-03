@@ -7,6 +7,7 @@ namespace TeamSalesTrackerApi.Dtos
         public long BranchId { get; set; }
         public string Name { get; set; }
         public long BranchNumber { get; set; }
+        public long AddressId { get; set; }
         public string StreetName { get; set; }
         public long StreetNumber { get; set; }
     }
