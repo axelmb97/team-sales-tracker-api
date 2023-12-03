@@ -4,15 +4,17 @@ using TeamSalesTrackerApi.Business.Commands;
 using TeamSalesTrackerApi.Data;
 using TeamSalesTrackerApi.Models;
 using TeamSalesTrackerApi.Results.Products;
+using TeamSalesTrackerApi.Services.Interfaces;
 
 namespace TeamSalesTrackerApi.Business.Handlers
 {
     public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, ProductResult>
     {
-        private readonly SalesTrackerDB _data;
-        public DeleteProductHandler(SalesTrackerDB data)
+        
+        private readonly IProductService _productService;
+        public DeleteProductHandler(IProductService service)
         {
-            _data = data;
+            _productService = service;
         }
 
         public async Task<ProductResult> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
@@ -22,20 +24,14 @@ namespace TeamSalesTrackerApi.Business.Handlers
                 result.SetError("El id del producto no puede ser menor a 1", System.Net.HttpStatusCode.BadRequest);
                 return result;
             }
-            var product = await _data.Products.FirstOrDefaultAsync(p => p.ProductId.Equals(request.ProductId));
-            if (product == null)
+            var product = await _productService.ExistsById(request.ProductId);
+            if (!product)
             {
                 result.SetError("No puede eliminar un objeto que no existe", System.Net.HttpStatusCode.BadRequest);
                 return result;
             }
-            _data.Products.Remove(product);
-            await _data.SaveChangesAsync();
 
-            result.Product = new Product { 
-                ProductId = request.ProductId,
-                Name = product.Name,
-                Remarks = product.Remarks
-            };
+            result.Product = await _productService.DeleteProduct(request.ProductId);
             result.Message = "Producto eliminado con éxito";
             return result;
         }

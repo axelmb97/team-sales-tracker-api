@@ -7,19 +7,18 @@ using TeamSalesTrackerApi.Business.Commands;
 using TeamSalesTrackerApi.Data;
 using TeamSalesTrackerApi.Models;
 using TeamSalesTrackerApi.Results.Products;
+using TeamSalesTrackerApi.Services.Interfaces;
 
 namespace TeamSalesTrackerApi.Business.Handlers
 {
     public class CreateProductHandler : IRequestHandler<CreateProductCommand, ProductResult>
     {
-        private readonly SalesTrackerDB _data;
         private readonly IValidator<CreateProductCommand> _validator;
-        private readonly IMapper _mapper;
-        public CreateProductHandler(SalesTrackerDB data, IValidator<CreateProductCommand> validator, IMapper mapper)
+        private readonly IProductService _productService;
+        public CreateProductHandler(IValidator<CreateProductCommand> validator, IProductService productService)
         {
-            _data = data;
             _validator = validator;
-            _mapper = mapper;   
+            _productService = productService;
         }
 
         public async Task<ProductResult> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -32,20 +31,15 @@ namespace TeamSalesTrackerApi.Business.Handlers
                 return result;
             }
 
-            var existingProduct = await _data.Products
-                .FirstOrDefaultAsync( p => p.Name.ToUpper().Equals(request.Name.ToUpper()));
 
-            if (existingProduct != null) {
+            var existingProduct = await _productService.Exists(request.Name);
+            if (existingProduct) {
                 result.SetError("Ya existe un producto con este nombre", HttpStatusCode.BadRequest);
                 return result;
             }
 
-            var newProduct = _mapper.Map<Product>(request);
-            _data.Products.Add(newProduct);
-            await _data.SaveChangesAsync();
-
             result.Message = "Producto registrado con éxito";
-            result.Product = newProduct;
+            result.Product = await _productService.CreateProduct(request);
 
 
             return result;

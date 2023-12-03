@@ -6,19 +6,19 @@ using TeamSalesTrackerApi.Business.Commands;
 using TeamSalesTrackerApi.Data;
 using TeamSalesTrackerApi.Dtos;
 using TeamSalesTrackerApi.Results.Branches;
+using TeamSalesTrackerApi.Services.Interfaces;
 
 namespace TeamSalesTrackerApi.Business.Handlers
 {
     public class UpdateBranchHandler : IRequestHandler<UpdateBranchCommand, BranchResult>
     {
-        private readonly SalesTrackerDB _data;
-        private readonly IMapper _mapper;
+        
         private readonly IValidator<UpdateBranchCommand> _validator;
-        public UpdateBranchHandler(SalesTrackerDB data, IMapper mapper, IValidator<UpdateBranchCommand> validator)
+        private readonly IBranchService _branchService;
+        public UpdateBranchHandler(IValidator<UpdateBranchCommand> validator, IBranchService branchService)
         {
-            _data = data;
-            _mapper = mapper;
             _validator = validator;
+            _branchService = branchService;
         }
 
         public async Task<BranchResult> Handle(UpdateBranchCommand request, CancellationToken cancellationToken)
@@ -30,23 +30,13 @@ namespace TeamSalesTrackerApi.Business.Handlers
                 result.SetError(errors, System.Net.HttpStatusCode.BadRequest);
                 return result;
             }
-            var branchToUpdate = await _data.Branches.Include(b => b.Address).FirstOrDefaultAsync(b => b.BranchId.Equals(request.BranchId)
-                && b.Address.AddressId.Equals(request.AddressId));
-            if (branchToUpdate == null) {
+            var branchToUpdate = await _branchService.ExistsByBranchIdAndAddressId(request.BranchId, request.AddressId);
+            if (!branchToUpdate) {
                 result.SetError($"No existe sucursal con id {request.BranchId} y direccion con id {request.AddressId}", System.Net.HttpStatusCode.BadRequest);
                 return result;
             }
 
-            branchToUpdate.BranchNumber = request.BranchNumber;
-            branchToUpdate.Name = request.Name;
-            branchToUpdate.Address.StreetName = request.StreetName;
-            branchToUpdate.Address.StreetNumber = request.StreetNumber;
-            branchToUpdate.Address.ZipCode = request.ZipCode;
-            branchToUpdate.Address.Apartment = request.Apartment;
-           _data.Branches.Update(branchToUpdate);
-            await _data.SaveChangesAsync();
-
-            result.Branch = _mapper.Map<BranchDto>(branchToUpdate);
+            result.Branch = await _branchService.UpdateBranch(request);
             result.Message = "Sucursal actualizada correctamente";
             return result;
         }
