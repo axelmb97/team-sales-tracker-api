@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TeamSalesTrackerApi.Business.Commands;
+using TeamSalesTrackerApi.Results.Branches;
 
 namespace TeamSalesTrackerApi.Controllers
 {
@@ -12,6 +14,11 @@ namespace TeamSalesTrackerApi.Controllers
         public BranchesController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+        [HttpPost]
+        public async Task<BranchResult> createBranch(CreateBranchCommand command) {
+            var result = await _mediator.Send(command);
+            return result;
         }
     }
 }
