@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TeamSalesTrackerApi.Business.Commands;
 using TeamSalesTrackerApi.Business.Queries;
+using TeamSalesTrackerApi.Dtos;
+using TeamSalesTrackerApi.Models;
+using TeamSalesTrackerApi.Results.Pagination;
 using TeamSalesTrackerApi.Results.Products;
 
 namespace TeamSalesTrackerApi.Controllers
@@ -44,6 +47,12 @@ namespace TeamSalesTrackerApi.Controllers
         public async Task<ProductResult> deleteProduct(long id) {
             var request = new DeleteProductCommand(id);
             var result = await _mediator.Send(request);
+            return result;
+        }
+        [HttpGet]
+        [Route("paginated")]
+        public async Task<PaginationResult<Product>> GetPagination([FromQuery] PaginationCommand command) {
+            var result = await _mediator.Send(command);
             return result;
         }
     }

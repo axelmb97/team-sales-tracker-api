@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TeamSalesTrackerApi.Data;
+using TeamSalesTrackerApi.Models;
 using TeamSalesTrackerApi.Services.Implementations;
 using TeamSalesTrackerApi.Services.Interfaces;
 
@@ -78,6 +79,7 @@ builder.Services.AddScoped<IEncryptService, EncryptService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IBranchService, BranchService>();
+builder.Services.AddScoped<IPaginationService, PaginationService>();
 var app = builder.Build();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
