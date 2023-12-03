@@ -34,15 +34,14 @@ namespace TeamSalesTrackerApi.Services.Implementations
             }
 
             var address = _mapper.Map<Address>(userData);
-            _data.Addresses.Add(address);
-            await _data.SaveChangesAsync();
+    
 
 
             var user = _mapper.Map<User>(userData);
             var encrypData = _encryptService.Encrypt(userData.Password);
             user.Password = encrypData.Password;
             user.PasswordSalt = encrypData.PasswordSalt;
-            user.AddressId = address.AddressId;
+            //user.Address.AddressId = address.AddressId;
             user.Address = address;
             _data.Users.Add(user);
             await _data.SaveChangesAsync();

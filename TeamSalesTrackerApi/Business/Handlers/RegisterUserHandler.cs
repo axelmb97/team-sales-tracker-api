@@ -20,6 +20,7 @@ namespace TeamSalesTrackerApi.Business.Handlers
 
         public async Task<RegisterResult> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
+            //TODO: REVISAR RELACION CON ADDRESS
             var result = new RegisterResult();
             var validations = await _validator.ValidateAsync(request);
             if (!validations.IsValid) {

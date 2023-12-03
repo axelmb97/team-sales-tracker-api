@@ -31,7 +31,7 @@ namespace TeamSalesTrackerApi.Business.Handlers
                 return result;
             }
             var branchToUpdate = await _data.Branches.Include(b => b.Address).FirstOrDefaultAsync(b => b.BranchId.Equals(request.BranchId)
-                && b.AddressId.Equals(request.AddressId));
+                && b.Address.AddressId.Equals(request.AddressId));
             if (branchToUpdate == null) {
                 result.SetError($"No existe sucursal con id {request.BranchId} y direccion con id {request.AddressId}", System.Net.HttpStatusCode.BadRequest);
                 return result;

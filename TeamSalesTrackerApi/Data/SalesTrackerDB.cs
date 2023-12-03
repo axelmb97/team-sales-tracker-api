@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Reflection.Emit;
 using TeamSalesTrackerApi.Models;
 
 namespace TeamSalesTrackerApi.Data
@@ -18,12 +19,17 @@ namespace TeamSalesTrackerApi.Data
         public DbSet<Sale> Sales { get; set; }
         public DbSet<SaleDetail> SaleDetails { get; set; }
         public DbSet<Product> Products { get; set; }
-        protected override void OnModelCreating(ModelBuilder md)
+        protected override void OnModelCreating(ModelBuilder mb)
         {
             var enumConverter = new EnumToStringConverter<IntervalState>();
-            md.Entity<Interval>()
+            mb.Entity<Interval>()
                 .Property(i => i.State)
                 .HasConversion(enumConverter);
+            mb.Entity<Branch>()
+            .HasOne(b => b.Address)
+            .WithOne(a => a.Branch)
+            .HasForeignKey<Address>(a => a.BranchId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
    

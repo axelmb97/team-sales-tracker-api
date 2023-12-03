@@ -24,8 +24,9 @@ namespace TeamSalesTrackerApi.Utils
             CreateMap<CreateBranchCommand, Address>();
             CreateMap<Branch, BranchDto>()
                 .ForMember(dest => dest.StreetName, opt => opt.MapFrom(src => src.Address.StreetName))
-                .ForMember(dest => dest.StreetNumber, opt => opt.MapFrom(src => src.Address.StreetNumber));
-
+                .ForMember(dest => dest.StreetNumber, opt => opt.MapFrom(src => src.Address.StreetNumber))
+                .ForMember(dest => dest.AddressId, opt => opt.MapFrom(src => src.Address.AddressId));
+                
      
         }
     }

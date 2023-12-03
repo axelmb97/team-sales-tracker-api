@@ -32,7 +32,7 @@ namespace TeamSalesTrackerApi.Business.Handlers
                 return result;
             }
 
-            var existingBranch = await _data.Branches.FirstOrDefaultAsync(b => b.BranchNumber.Equals(request.BranchNumber)
+            var existingBranch = await _data.Branches.Include(b => b.Address).FirstOrDefaultAsync(b => b.BranchNumber.Equals(request.BranchNumber)
                     && b.Address.StreetName.ToUpper().Equals(request.StreetName.ToUpper())
                     && b.Address.StreetNumber.Equals(request.StreetNumber));
             if (existingBranch != null) {
@@ -41,6 +41,7 @@ namespace TeamSalesTrackerApi.Business.Handlers
             }
             var newAddress = _mapper.Map<Address>(request);
             newAddress.Apartment = "-";
+            newAddress.UserId = null;
             var newBranch = _mapper.Map<Branch>(request);
 
             newBranch.Address = newAddress;

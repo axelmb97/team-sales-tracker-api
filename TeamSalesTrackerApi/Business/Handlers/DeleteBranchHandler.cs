@@ -31,7 +31,6 @@ namespace TeamSalesTrackerApi.Business.Handlers
                 result.SetError($"No existe una sucursal con id {request.BranchId}", System.Net.HttpStatusCode.BadRequest);
                 return result;
             }
-            //TODO: Elimina branch pero no elimina addrees
             _data.Branches.Remove(branchToUpdate);
             await _data.SaveChangesAsync();
 
@@ -39,7 +38,7 @@ namespace TeamSalesTrackerApi.Business.Handlers
                 BranchId = request.BranchId,
                 Name = branchToUpdate.Name,
                 BranchNumber = branchToUpdate.BranchNumber,
-                AddressId = branchToUpdate.AddressId,
+                AddressId = branchToUpdate.Address.AddressId,
                 StreetName = branchToUpdate.Address.StreetName,
                 StreetNumber = branchToUpdate.Address.StreetNumber
             };
