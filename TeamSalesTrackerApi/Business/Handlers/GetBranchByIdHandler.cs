@@ -5,17 +5,17 @@ using TeamSalesTrackerApi.Business.Queries;
 using TeamSalesTrackerApi.Data;
 using TeamSalesTrackerApi.Dtos;
 using TeamSalesTrackerApi.Results.Branches;
+using TeamSalesTrackerApi.Services.Interfaces;
 
 namespace TeamSalesTrackerApi.Business.Handlers
 {
     public class GetBranchByIdHandler : IRequestHandler<GetBranchByIdQuery, BranchResult>
     {
-        private readonly SalesTrackerDB _data;
-        private readonly IMapper _mapper;
-        public GetBranchByIdHandler(SalesTrackerDB data, IMapper mapper)
+        
+        private readonly IBranchService _branchService;
+        public GetBranchByIdHandler(IBranchService branchService)
         {
-            _data = data;
-            _mapper = mapper;
+            _branchService = branchService;
         }
 
         public async Task<BranchResult> Handle(GetBranchByIdQuery request, CancellationToken cancellationToken)
@@ -25,12 +25,12 @@ namespace TeamSalesTrackerApi.Business.Handlers
                 result.SetError("El id de la sucursal no puede ser menor a 1", System.Net.HttpStatusCode.BadRequest);
                 return result;
             }
-            var branch = await _data.Branches.Include(b => b.Address).FirstOrDefaultAsync(b => b.BranchId.Equals(request.BranchId));
+            var branch = await _branchService.GetById(request.BranchId);
             if (branch == null) {
                 result.SetError($"No existe una sucursal con id {request.BranchId}", System.Net.HttpStatusCode.NotFound);
                 return result;
             }
-            result.Branch = _mapper.Map<BranchDto>(branch);
+            result.Branch = branch;
             result.Message = "Sucursal recuperada correctamente";
             return result;
         }
