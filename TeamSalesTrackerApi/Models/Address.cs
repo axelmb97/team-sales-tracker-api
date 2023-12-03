@@ -15,6 +15,11 @@ namespace TeamSalesTrackerApi.Models
         public string ZipCode { get; set; }
         [Column("apartment")]
         public string Apartment { get; set; }
-
+        [Column("branch_id")]
+        public long? BranchId { get; set; }
+        public Branch Branch { get; set; }
+        [Column("user_id")]
+        public long? UserId { get; set; }
+        public User User { get; set; }
     }
 }
