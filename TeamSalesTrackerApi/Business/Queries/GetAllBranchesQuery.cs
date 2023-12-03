@@ -1,6 +1,9 @@
-﻿namespace TeamSalesTrackerApi.Business.Queries
+﻿using MediatR;
+using TeamSalesTrackerApi.Results.Branches;
+
+namespace TeamSalesTrackerApi.Business.Queries
 {
-    public class GetAllBranchesQuery
+    public class GetAllBranchesQuery : IRequest<BranchesResult>
     {
     }
 }
