@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TeamSalesTrackerApi.Business.Commands;
 using TeamSalesTrackerApi.Data;
+using TeamSalesTrackerApi.Dtos;
 using TeamSalesTrackerApi.Models;
 using TeamSalesTrackerApi.Services.Interfaces;
 
@@ -12,10 +13,12 @@ namespace TeamSalesTrackerApi.Services.Implementations
     {
         private readonly SalesTrackerDB _data;
         private readonly IMapper _mapper;
-        public ProductService(SalesTrackerDB data, IMapper mapper)
+        private readonly IPaginationService _paginationService;
+        public ProductService(SalesTrackerDB data, IMapper mapper, IPaginationService paginationService)
         {
             _data = data;
             _mapper = mapper;
+            _paginationService = paginationService;
         }
 
         public async Task<Product> CreateProduct(CreateProductCommand productData)
@@ -57,6 +60,17 @@ namespace TeamSalesTrackerApi.Services.Implementations
         {
            var product = await _data.Products.FirstOrDefaultAsync(p => p.ProductId.Equals(productId));
             return product;
+        }
+
+        public async Task<Pagination<Product>> GetPaginatedProducts(ProductPaginationCommand paginationParams)
+        {
+            var query = _data.Products;
+            return  await _paginationService.CreatePageGenericResults<Product>(
+                query,
+                paginationParams.PageNumber,
+                paginationParams.pageSize,
+                paginationParams.OrderBy,
+                paginationParams.OrderAsc);
         }
 
         public async Task<Product> UpdateProduct(UpdateProductCommand productData)

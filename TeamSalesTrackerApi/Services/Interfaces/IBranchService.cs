@@ -1,5 +1,6 @@
 ﻿using TeamSalesTrackerApi.Business.Commands;
 using TeamSalesTrackerApi.Dtos;
+using TeamSalesTrackerApi.Models;
 
 namespace TeamSalesTrackerApi.Services.Interfaces
 {
@@ -13,5 +14,6 @@ namespace TeamSalesTrackerApi.Services.Interfaces
         Task<BranchDto> CreateBranch(CreateBranchCommand branchData);
         Task<BranchDto> UpdateBranch(UpdateBranchCommand branchData);
         Task<BranchDto> DeleteBranch(long branchId);
+        Task<Pagination<BranchDto>> GetPaginatedProducts(BranchPaginationCommand paginationParams);
     }
 }

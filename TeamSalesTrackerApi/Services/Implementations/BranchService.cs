@@ -14,10 +14,12 @@ namespace TeamSalesTrackerApi.Services.Implementations
     {
         private readonly SalesTrackerDB _data;
         private readonly IMapper _mapper;
-        public BranchService(SalesTrackerDB data, IMapper mapper)
+        private readonly IPaginationService _pager;
+        public BranchService(SalesTrackerDB data, IMapper mapper, IPaginationService pager)
         {
             _data = data;
             _mapper = mapper;
+            _pager = pager;
         }
 
         public async Task<BranchDto> CreateBranch(CreateBranchCommand branchData)
@@ -92,6 +94,26 @@ namespace TeamSalesTrackerApi.Services.Implementations
             var branch = await _data.Branches.Include(b => b.Address).FirstOrDefaultAsync(b => b.BranchId.Equals(branchId));
             if (branch == null) return null;
             return _mapper.Map<BranchDto>(branch);
+        }
+
+        public async Task<Pagination<BranchDto>> GetPaginatedProducts(BranchPaginationCommand paginationParams)
+        {
+            var query = _data.Branches.Include(a => a.Address);
+            var branches = await _pager.CreatePageGenericResults<Branch>(
+                query,
+                paginationParams.PageNumber,
+                paginationParams.pageSize,
+                paginationParams.OrderBy,
+                paginationParams.OrderAsc);
+            var branchesDto = branches.Items.Select(b => _mapper.Map<BranchDto>(b)).ToList();
+
+            var branchDtoPagination = new Pagination<BranchDto>();
+            branchDtoPagination.PageNumber = paginationParams.PageNumber;
+            branchDtoPagination.TotalPages = branches.TotalPages;
+            branchDtoPagination.TotalItems = branches.TotalItems;
+            branchDtoPagination.Items = branchesDto;
+
+            return branchDtoPagination;
         }
 
         public async Task<BranchDto> UpdateBranch(UpdateBranchCommand branchData)

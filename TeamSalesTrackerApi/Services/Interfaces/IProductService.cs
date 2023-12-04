@@ -1,4 +1,5 @@
 ﻿using TeamSalesTrackerApi.Business.Commands;
+using TeamSalesTrackerApi.Dtos;
 using TeamSalesTrackerApi.Models;
 
 namespace TeamSalesTrackerApi.Services.Interfaces
@@ -12,5 +13,6 @@ namespace TeamSalesTrackerApi.Services.Interfaces
         Task<Product> DeleteProduct(long productId);
         Task<List<Product>> GetAll();
         Task<Product> GetById(long productId);
+        Task<Pagination<Product>> GetPaginatedProducts(ProductPaginationCommand paginationParams);
     }
 }
