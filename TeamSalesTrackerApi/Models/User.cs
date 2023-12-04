@@ -21,5 +21,7 @@ namespace TeamSalesTrackerApi.Models
         public DateTime DateOfBirth { get; set; }
         public virtual Address Address { get; set; }
         public virtual List<Interval> Intervals { get; set; }
+
+        public virtual List<UserRole> Roles { get; set; }
     }
 }
