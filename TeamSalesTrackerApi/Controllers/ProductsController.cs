@@ -51,7 +51,7 @@ namespace TeamSalesTrackerApi.Controllers
         }
         [HttpGet]
         [Route("paginated")]
-        public async Task<PaginationResult<Product>> GetPagination([FromQuery] PaginationCommand command) {
+        public async Task<PaginationResult<Product>> GetPagination([FromQuery] ProductPaginationCommand command) {
             var result = await _mediator.Send(command);
             return result;
         }

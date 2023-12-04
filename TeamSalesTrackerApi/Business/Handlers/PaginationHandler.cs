@@ -8,17 +8,17 @@ using TeamSalesTrackerApi.Services.Interfaces;
 
 namespace TeamSalesTrackerApi.Business.Handlers
 {
-    public class PaginationHandler : IRequestHandler<PaginationCommand, PaginationResult<Product>>
+    public class PaginationHandler : IRequestHandler<ProductPaginationCommand, PaginationResult<Product>>
     {
         private readonly IProductService _productService;
-        private readonly IValidator<PaginationCommand> _validator;
-        public PaginationHandler(IProductService productService, IValidator<PaginationCommand> validator)
+        private readonly IValidator<ProductPaginationCommand> _validator;
+        public PaginationHandler(IProductService productService, IValidator<ProductPaginationCommand> validator)
         {
             _productService = productService;
             _validator = validator;
         }
 
-        public async Task<PaginationResult<Product>> Handle(PaginationCommand request, CancellationToken cancellationToken)
+        public async Task<PaginationResult<Product>> Handle(ProductPaginationCommand request, CancellationToken cancellationToken)
         {
             var result = new PaginationResult<Product>();
             var validations = await _validator.ValidateAsync(request);

@@ -13,6 +13,6 @@ namespace TeamSalesTrackerApi.Services.Interfaces
         Task<Product> DeleteProduct(long productId);
         Task<List<Product>> GetAll();
         Task<Product> GetById(long productId);
-        Task<Pagination<Product>> GetPaginatedProducts(PaginationCommand paginationParams);
+        Task<Pagination<Product>> GetPaginatedProducts(ProductPaginationCommand paginationParams);
     }
 }

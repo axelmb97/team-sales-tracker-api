@@ -62,7 +62,7 @@ namespace TeamSalesTrackerApi.Services.Implementations
             return product;
         }
 
-        public async Task<Pagination<Product>> GetPaginatedProducts(PaginationCommand paginationParams)
+        public async Task<Pagination<Product>> GetPaginatedProducts(ProductPaginationCommand paginationParams)
         {
             var query = _data.Products;
             return  await _paginationService.CreatePageGenericResults<Product>(

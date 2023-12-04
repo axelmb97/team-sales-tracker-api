@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TeamSalesTrackerApi.Business.Commands;
 using TeamSalesTrackerApi.Business.Queries;
+using TeamSalesTrackerApi.Dtos;
 using TeamSalesTrackerApi.Results.Branches;
+using TeamSalesTrackerApi.Results.Pagination;
 
 namespace TeamSalesTrackerApi.Controllers
 {
@@ -45,6 +47,12 @@ namespace TeamSalesTrackerApi.Controllers
         public async Task<BranchResult> DeleteBranch(long id) {
             var request = new DeleteBranchCommand(id);
             var result = await _mediator.Send(request);
+            return result;
+        }
+        [HttpGet]
+        [Route("paginated")]
+        public async Task<PaginationResult<BranchDto>> GetPaginatedBraches([FromQuery]BranchPaginationCommand command) {
+            var result = await _mediator.Send(command);
             return result;
         }
     }
