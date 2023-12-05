@@ -19,17 +19,20 @@ namespace TeamSalesTrackerApi.Data
         public DbSet<Sale> Sales { get; set; }
         public DbSet<SaleDetail> SaleDetails { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Role> Roles { get; set; }
+
         protected override void OnModelCreating(ModelBuilder mb)
         {
             var enumConverter = new EnumToStringConverter<IntervalState>();
             mb.Entity<Interval>()
                 .Property(i => i.State)
                 .HasConversion(enumConverter);
-            mb.Entity<Branch>()
-            .HasOne(b => b.Address)
-            .WithOne(a => a.Branch)
-            .HasForeignKey<Address>(a => a.BranchId)
-            .OnDelete(DeleteBehavior.Cascade);
+
+            
+
+            //mb.Entity<UserRole>()
+            //    .HasKey( ur => new { ur.UserRoleId, ur.UserId, ur.RoleId });
         }
     }
    

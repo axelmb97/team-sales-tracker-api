@@ -26,7 +26,6 @@ namespace TeamSalesTrackerApi.Services.Implementations
         {
             var newAddress = _mapper.Map<Address>(branchData);
             newAddress.Apartment = "-";
-            newAddress.UserId = null;
             var newBranch = _mapper.Map<Branch>(branchData);
             newBranch.Address = newAddress;
 
@@ -42,6 +41,8 @@ namespace TeamSalesTrackerApi.Services.Implementations
             _data.Branches.Remove(branchToDelete);
             await _data.SaveChangesAsync();
 
+            _data.Addresses.Remove(branchToDelete.Address);
+            await _data.SaveChangesAsync();
             BranchDto deletedBranch = new BranchDto
             {
                 BranchId = branchId,
