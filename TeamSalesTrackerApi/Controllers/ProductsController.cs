@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TeamSalesTrackerApi.Business.Commands;
@@ -20,12 +21,14 @@ namespace TeamSalesTrackerApi.Controllers
             _mediator = mediator;
         }
         [HttpPost]
+        [Authorize(Roles = "ADMIN, ENCARGADO/A")]
         public async Task<ProductResult> createProduct(CreateProductCommand command)
         {
             var result = await _mediator.Send(command);
             return result;
         }
         [HttpPut]
+        [Authorize(Roles = "ADMIN, ENCARGADO/A")]
         public async Task<ProductResult> updateProduct(UpdateProductCommand command) {
             var result = await _mediator.Send(command);
             return result;
@@ -44,6 +47,7 @@ namespace TeamSalesTrackerApi.Controllers
             return result;
         }
         [HttpDelete]
+        [Authorize(Roles = "ADMIN, ENCARGADO/A")]
         public async Task<ProductResult> deleteProduct(long id) {
             var request = new DeleteProductCommand(id);
             var result = await _mediator.Send(request);

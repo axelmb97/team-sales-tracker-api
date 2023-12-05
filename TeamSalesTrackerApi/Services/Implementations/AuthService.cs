@@ -27,34 +27,46 @@ namespace TeamSalesTrackerApi.Services.Implementations
         public async Task<RegisterResult> RegisterUser(RegisterUserCommand userData)
         {
             var result = new RegisterResult();
-            var existingEmail = await _data.Users.FirstOrDefaultAsync(user => user.Email.Equals(userData.Email));
-            if (existingEmail != null) {
+            var existingEmail = await _data.Users.Include(u => u.Roles).ThenInclude(r => r.Role).FirstOrDefaultAsync(user => user.Email.Equals(userData.Email));
+            if (existingEmail != null)
+            {
                 result.SetError("El email ya se encuentra registrado. Pruebe con otro.", System.Net.HttpStatusCode.BadRequest);
                 return result;
             }
 
-            var address = _mapper.Map<Address>(userData);
-    
-
+            var userRoles = GenerateUserRolesModels(userData.RolesId);
 
             var user = _mapper.Map<User>(userData);
             var encrypData = _encryptService.Encrypt(userData.Password);
             user.Password = encrypData.Password;
             user.PasswordSalt = encrypData.PasswordSalt;
-            //user.Address.AddressId = address.AddressId;
+
+            var address = _mapper.Map<Address>(userData);
             user.Address = address;
+            user.Roles = userRoles;
             _data.Users.Add(user);
             await _data.SaveChangesAsync();
 
+
+            var userRegister = await _data.Users
+                .Include(user => user.Roles).ThenInclude(r => r.Role).FirstOrDefaultAsync(u => u.Email.Equals(userData.Email));
             result.user = _mapper.Map<RegisteredUserDto>(user);
             result.Token = _tokenService.CreateToken(user);
             result.Message = "Usuario registrado con éxito";
             return result;
         }
-
+        private List<UserRole> GenerateUserRolesModels(List<long> roles) {
+            var rolesModels = new List<UserRole>();
+            foreach (var role in roles) {
+                var newUserRole = new UserRole();
+                newUserRole.RoleId = role; 
+                rolesModels.Add(newUserRole);
+            }
+            return rolesModels;
+        }
         public async Task<string> VerifyCredentials(string email, string password)
         {
-            var user = await _data.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
+            var user = await _data.Users.Include(u => u.Roles).ThenInclude(r => r.Role).FirstOrDefaultAsync(u => u.Email.Equals(email));
             if (user == null) {
                 return String.Empty;
             }

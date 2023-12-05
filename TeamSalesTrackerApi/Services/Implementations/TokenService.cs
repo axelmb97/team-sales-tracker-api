@@ -20,13 +20,16 @@ namespace TeamSalesTrackerApi.Services.Implementations
         public string CreateToken(User user)
         {
             var credentials = new SigningCredentials(_symmetricSecutiryKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[] {
+            
+            var roles = user.Roles.Select(r => r.Role.Name).ToList();
+            var claims =new List<Claim> {
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
-
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                
             };
-
+            foreach (var role in roles) {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
             var tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddMinutes(240),

@@ -29,11 +29,7 @@ namespace TeamSalesTrackerApi.Data
                 .Property(i => i.State)
                 .HasConversion(enumConverter);
 
-            mb.Entity<Branch>()
-            .HasOne(b => b.Address)
-            .WithOne(a => a.Branch)
-            .HasForeignKey<Address>(a => a.BranchId)
-            .OnDelete(DeleteBehavior.Cascade);
+            
 
             //mb.Entity<UserRole>()
             //    .HasKey( ur => new { ur.UserRoleId, ur.UserId, ur.RoleId });

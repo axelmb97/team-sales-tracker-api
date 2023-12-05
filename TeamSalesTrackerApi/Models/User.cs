@@ -19,6 +19,9 @@ namespace TeamSalesTrackerApi.Models
         public byte[] PasswordSalt { get; set; }
         [Column("date_of_birth")]
         public DateTime DateOfBirth { get; set; }
+        [Column("address_id")]
+        public long AddressId { get; set; }
+        [ForeignKey("AddressId")]
         public virtual Address Address { get; set; }
         public virtual List<Interval> Intervals { get; set; }
 

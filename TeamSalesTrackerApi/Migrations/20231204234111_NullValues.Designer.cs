@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TeamSalesTrackerApi.Data;
@@ -11,9 +12,10 @@ using TeamSalesTrackerApi.Data;
 namespace TeamSalesTrackerApi.Migrations
 {
     [DbContext(typeof(SalesTrackerDB))]
-    partial class SalesTrackerDBModelSnapshot : ModelSnapshot
+    [Migration("20231204234111_NullValues")]
+    partial class NullValues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,6 +38,10 @@ namespace TeamSalesTrackerApi.Migrations
                         .HasColumnType("text")
                         .HasColumnName("apartment");
 
+                    b.Property<long?>("BranchId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("branch_id");
+
                     b.Property<string>("StreetName")
                         .IsRequired()
                         .HasColumnType("text")
@@ -45,12 +51,20 @@ namespace TeamSalesTrackerApi.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("street_number");
 
+                    b.Property<long?>("UserId")
+                        .IsRequired()
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
                     b.Property<string>("ZipCode")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("zip_code");
 
                     b.HasKey("AddressId");
+
+                    b.HasIndex("BranchId")
+                        .IsUnique();
 
                     b.ToTable("ADDRESSES");
                 });
@@ -64,10 +78,6 @@ namespace TeamSalesTrackerApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("BranchId"));
 
-                    b.Property<long>("AddressId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("address_id");
-
                     b.Property<long>("BranchNumber")
                         .HasColumnType("bigint")
                         .HasColumnName("branch_number");
@@ -78,9 +88,6 @@ namespace TeamSalesTrackerApi.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("BranchId");
-
-                    b.HasIndex("AddressId")
-                        .IsUnique();
 
                     b.ToTable("BRANCHES");
                 });
@@ -281,15 +288,8 @@ namespace TeamSalesTrackerApi.Migrations
             modelBuilder.Entity("TeamSalesTrackerApi.Models.User", b =>
                 {
                     b.Property<long>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasColumnName("user_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("UserId"));
-
-                    b.Property<long>("AddressId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("address_id");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("timestamp with time zone")
@@ -322,9 +322,6 @@ namespace TeamSalesTrackerApi.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("AddressId")
-                        .IsUnique();
-
                     b.ToTable("USERS");
                 });
 
@@ -354,15 +351,14 @@ namespace TeamSalesTrackerApi.Migrations
                     b.ToTable("USERS_ROLES");
                 });
 
-            modelBuilder.Entity("TeamSalesTrackerApi.Models.Branch", b =>
+            modelBuilder.Entity("TeamSalesTrackerApi.Models.Address", b =>
                 {
-                    b.HasOne("TeamSalesTrackerApi.Models.Address", "Address")
-                        .WithOne("Branch")
-                        .HasForeignKey("TeamSalesTrackerApi.Models.Branch", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("TeamSalesTrackerApi.Models.Branch", "Branch")
+                        .WithOne("Address")
+                        .HasForeignKey("TeamSalesTrackerApi.Models.Address", "BranchId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("Address");
+                    b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("TeamSalesTrackerApi.Models.Interval", b =>
@@ -437,9 +433,8 @@ namespace TeamSalesTrackerApi.Migrations
                 {
                     b.HasOne("TeamSalesTrackerApi.Models.Address", "Address")
                         .WithOne("User")
-                        .HasForeignKey("TeamSalesTrackerApi.Models.User", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TeamSalesTrackerApi.Models.User", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Address");
                 });
@@ -465,13 +460,15 @@ namespace TeamSalesTrackerApi.Migrations
 
             modelBuilder.Entity("TeamSalesTrackerApi.Models.Address", b =>
                 {
-                    b.Navigation("Branch");
-
-                    b.Navigation("User");
+                    b.Navigation("User")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TeamSalesTrackerApi.Models.Branch", b =>
                 {
+                    b.Navigation("Address")
+                        .IsRequired();
+
                     b.Navigation("Sales");
                 });
 

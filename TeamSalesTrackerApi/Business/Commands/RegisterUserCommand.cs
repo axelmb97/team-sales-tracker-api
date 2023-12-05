@@ -14,6 +14,7 @@ namespace TeamSalesTrackerApi.Business.Commands
         public string StreetNumber { get; set; }
         public string ZipCode { get; set; }
         public string Apartment { get; set; }
+        public List<long> RolesId { get; set; }
 
     }
 }
