@@ -80,6 +80,14 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<IPaginationService, PaginationService>();
+
+builder.Services.AddCors(options => {
+    options.AddDefaultPolicy(policy => {
+        policy.AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin();
+    });
+});
 var app = builder.Build();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
