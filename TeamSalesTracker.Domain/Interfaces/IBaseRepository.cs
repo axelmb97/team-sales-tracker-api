@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TeamSalesTracker.Domain.Interfaces
 {
     public interface IBaseRepository<TEntity,TEntityID>
-         : IAdd<TEntity>, IEdit<TEntityID>, IDelete<TEntity, TEntityID>, IGet<TEntity,TEntityID>, ITransaction
+         : IAdd<TEntity>, IEdit<TEntity>, IDelete<TEntity, TEntityID>, IGet<TEntity,TEntityID>, ITransaction
     {
     }
 }

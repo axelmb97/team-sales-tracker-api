@@ -8,6 +8,6 @@ namespace TeamSalesTracker.Domain.Interfaces
 {
     public interface IAdd<TEntity>
     {
-        TEntity Add(TEntity entity);
+        Task<TEntity> Add(TEntity entity);
     }
 }

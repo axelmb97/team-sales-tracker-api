@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace TeamSalesTracker.Domain.Interfaces
 {
-    public interface ITransaction
+    public interface IUserRepository<TEntity, TEntityEmail>
+        : IAdd<TEntity>, ITransaction
     {
-        Task Save();
+        Task<TEntity> GetByEmail(TEntityEmail email);
     }
 }

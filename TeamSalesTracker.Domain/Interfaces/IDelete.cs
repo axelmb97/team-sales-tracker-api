@@ -8,6 +8,6 @@ namespace TeamSalesTracker.Domain.Interfaces
 {
     public interface IDelete<TEntity, TEntityID>
     {
-        TEntity Delete(TEntityID entityId);
+        Task<TEntity> Delete(TEntityID entityId);
     }
 }

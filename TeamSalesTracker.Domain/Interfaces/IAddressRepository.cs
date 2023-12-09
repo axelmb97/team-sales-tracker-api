@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace TeamSalesTracker.Domain.Interfaces
 {
-    public interface IGet<TEntity, TEntityID>
+    public interface IAddressRepository<TEntity, TEntityID>
+        : IAdd<TEntity>, IEdit<TEntity>, IDelete<TEntity, TEntityID>, ITransaction
     {
-        Task<List<TEntity>> GetAll();
         Task<TEntity> GetById(TEntityID entityId);
     }
 }

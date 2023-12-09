@@ -8,6 +8,6 @@ namespace TeamSalesTracker.Domain.Interfaces
 {
     public interface IEdit<TEntity>
     {
-        TEntity Edit(TEntity entity);
+        Task<TEntity> Edit(TEntity entity);
     }
 }
