@@ -14,7 +14,5 @@ namespace TeamSalesTracker.Domain
         public long StreetNumber { get; set; }
         public string ZipCode { get; set; }
         public string Apartment { get; set; }
-        public Branch? Branch { get; set; }
-        public User? User { get; set; }
     }
 }

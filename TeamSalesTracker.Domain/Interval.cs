@@ -18,5 +18,6 @@ namespace TeamSalesTracker.Domain
         public DateOnly CreatedAt { get; set; }
         public IntervalState State { get; set; }
         public virtual List<IntervalTarget> Targets { get; set; }
+        public virtual List<Sale> Sales { get; set; }
     }
 }
